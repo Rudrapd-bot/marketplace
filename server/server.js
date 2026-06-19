@@ -1,33 +1,86 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
-const serviceRoutes = require("./routes/serviceRoutes");
+const path = require("path");
+
 const connectDB = require("./config/db");
 
+// Routes
 const authRoutes = require("./routes/authRoutes");
-const vendorRoutes = require("./routes/vendorRoutes");
+const projectRoutes = require("./routes/projectRoutes");
+const messageRoutes = require("./routes/meessageRoutes");
 
 const app = express();
 
-// Connect Database
+// ===============================
+// Connect to MongoDB
+// ===============================
 connectDB();
-app.use("/api/services", serviceRoutes);
-// Middleware
+
+// ===============================
+// Middlewares
+// ===============================
 app.use(cors());
+
 app.use(express.json());
 
-// Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/vendors", vendorRoutes);
+app.use(express.urlencoded({ extended: true }));
 
-// Test Route
+// Serve Uploaded Images
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// ===============================
+// API Routes
+// ===============================
+
+// Authentication Routes
+app.use("/api/auth", authRoutes);
+
+// Project Routes
+app.use("/api/projects", projectRoutes);
+
+// Message Routes
+app.use("/api/messages", messageRoutes);
+
+// ===============================
+// Home Route
+// ===============================
 app.get("/", (req, res) => {
-    res.send("Vendor Marketplace API");
+  res.status(200).json({
+    success: true,
+    message: "🚀 Welcome to ProjectHub API",
+    version: "1.0.0",
+  });
 });
 
+// ===============================
+// 404 Route
+// ===============================
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route Not Found",
+  });
+});
+
+// ===============================
+// Global Error Handler
+// ===============================
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+
+  res.status(500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
+});
+
+// ===============================
 // Start Server
+// ===============================
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
