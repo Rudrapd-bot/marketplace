@@ -170,7 +170,7 @@ return (
         type="button"
         onClick={() => {
           window.location.href =
-            "http://localhost:5000/api/auth/google";
+            "https://marketplace-7xwt.onrender.com/api/auth/google";
         }}
         className="w-full border border-slate-300 bg-white py-3 rounded-2xl flex items-center justify-center gap-3 hover:bg-slate-50 transition-all shadow-sm"
       >
