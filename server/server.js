@@ -3,7 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-
+const passport = require("passport");
 const connectDB = require("./config/db");
 
 // Routes
@@ -29,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve Uploaded Images
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+require("./config/passport");
 
 // ===============================
 // API Routes
@@ -42,6 +43,8 @@ app.use("/api/projects", projectRoutes);
 
 // Message Routes
 app.use("/api/messages", messageRoutes);
+
+app.use(passport.initialize());
 
 // ===============================
 // Home Route
