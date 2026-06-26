@@ -8,8 +8,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL:
-        "http://localhost:5000/api/auth/google/callback",
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
     },
 
     async (accessToken, refreshToken, profile, done) => {
@@ -25,7 +24,8 @@ passport.use(
             googleId: profile.id,
             name: profile.displayName,
             email: profile.emails[0].value,
-            profileImage: profile.photos[0]?.value || "",
+            profileImage: profile.photos?.[0]?.value || "",
+            password: "",
           });
 
         }
@@ -40,3 +40,5 @@ passport.use(
     }
   )
 );
+
+module.exports = passport;
